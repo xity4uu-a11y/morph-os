@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 340" width="1200" height="340" role="img" aria-label="morph-os — Local Runtime Stream, API and DOM Mutator">
+  <defs>
+    <pattern id="hairlineGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e2026" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- Obsidian Canvas -->
+  <rect width="1200" height="340" rx="16" fill="#0b0c0f"/>
+  <rect width="1200" height="340" rx="16" fill="url(#hairlineGrid)" opacity="0.55"/>
+  <rect x="1" y="1" width="1198" height="338" rx="15" fill="none" stroke="#242730" stroke-width="1"/>
+
+  <!-- Left Architectural Accent Rail -->
+  <line x1="68" y1="64" x2="68" y2="276" stroke="#303440" stroke-width="1"/>
+  <rect x="64" y="64" width="8" height="36" rx="2" fill="#f5f5f7"/>
+
+  <!-- Top Classification Metadata -->
+  <text x="96" y="84" fill="#8e94a0" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12" letter-spacing="1.8">LOCAL RUNTIME MUTATION ENGINE  /  RUST + WASM + TAURI V2 + OLLAMA</text>
+
+  <!-- Primary Wordmark -->
+  <text x="94" y="166" fill="#f5f5f7" font-family="-apple-system, BlinkMacSystemFont, Inter, Segoe UI, sans-serif" font-size="76" font-weight="600" letter-spacing="-2.4">morph-os</text>
+
+  <!-- Subtitle -->
+  <text x="96" y="210" fill="#a1a7b3" font-family="-apple-system, BlinkMacSystemFont, Inter, Segoe UI, sans-serif" font-size="20" font-weight="400">Stop rewriting legacy code. Mutate CLI streams, HTTP APIs, and DOM locally at runtime.</text>
+
+  <!-- Minimalist Capability Pills -->
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="12">
+    <rect x="96" y="240" width="144" height="30" rx="6" fill="#14161b" stroke="#2a2e38"/>
+    <text x="168" y="259" text-anchor="middle" fill="#d4d7de">stdio -> JSON</text>
+
+    <rect x="252" y="240" width="166" height="30" rx="6" fill="#14161b" stroke="#2a2e38"/>
+    <text x="335" y="259" text-anchor="middle" fill="#d4d7de">Loopback Proxy</text>
+
+    <rect x="430" y="240" width="162" height="30" rx="6" fill="#14161b" stroke="#2a2e38"/>
+    <text x="511" y="259" text-anchor="middle" fill="#d4d7de">WASM 1.0 Kernel</text>
+
+    <rect x="604" y="240" width="194" height="30" rx="6" fill="#14161b" stroke="#2a2e38"/>
+    <text x="701" y="259" text-anchor="middle" fill="#d4d7de">Read-Only eBPF Spec</text>
+
+    <rect x="810" y="240" width="152" height="30" rx="6" fill="#12211a" stroke="#1e4030"/>
+    <text x="886" y="259" text-anchor="middle" fill="#63d297">CLOUD BYTES: 0</text>
+  </g>
+
+  <!-- Right-Side Minimalist Pipeline Schematic -->
+  <g transform="translate(996, 78)" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11">
+    <rect x="0" y="0" width="148" height="38" rx="6" fill="#14161b" stroke="#2d313d"/>
+    <text x="74" y="23" text-anchor="middle" fill="#a1a7b3">LEGACY STREAM</text>
+
+    <line x1="74" y1="38" x2="74" y2="66" stroke="#3c4252" stroke-width="1.5"/>
+    <polygon points="69,62 79,62 74,70" fill="#5d657a"/>
+
+    <rect x="0" y="70" width="148" height="44" rx="6" fill="#1a1d24" stroke="#636b7e"/>
+    <text x="74" y="96" text-anchor="middle" fill="#f5f5f7" font-weight="600">MORPH PIPELINE</text>
+
+    <line x1="74" y1="114" x2="74" y2="142" stroke="#3c4252" stroke-width="1.5"/>
+    <polygon points="69,138 79,138 74,146" fill="#5d657a"/>
+
+    <rect x="0" y="146" width="148" height="38" rx="6" fill="#12211a" stroke="#244a38"/>
+    <text x="74" y="169" text-anchor="middle" fill="#63d297">TYPED JSON V2</text>
+  </g>
+</svg>

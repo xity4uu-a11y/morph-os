@@ -1,0 +1,38 @@
+# Rust build artifacts
+target/
+src-tauri/target/
+Cargo.lock
+
+# Release binaries & checksums
+dist/
+
+# Node & frontend dependencies / build output
+node_modules/
+ui/node_modules/
+ui/dist/
+ui/.vite/
+coverage/
+
+# Local runtime state, databases, secrets
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Compiled eBPF objects (generated locally on Linux)
+ebpf/*.o
+
+# OS & editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo

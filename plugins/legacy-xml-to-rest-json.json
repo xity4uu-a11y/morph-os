@@ -1,0 +1,24 @@
+{
+  "id": "legacy-xml-to-rest-json",
+  "aliases": ["xml-to-json", "soap-to-json"],
+  "name": "Legacy XML / SOAP Payload to REST JSON",
+  "version": "1.0.0",
+  "target_kind": "http-proxy",
+  "description": "Translates XML and legacy enterprise SOAP responses on the fly into normalized snake_case REST JSON with a versioned schema envelope.",
+  "author": "morph-os-core",
+  "fail_policy": "fail-open",
+  "output_format": "json",
+  "rules": [
+    {
+      "op": "xml_to_json"
+    },
+    {
+      "op": "wrap_envelope",
+      "schema_version": "2026-11-rest-v2",
+      "data_key": "payload"
+    }
+  ],
+  "llm_prompt": "Translate the incoming XML document into a clean, typed JSON object with snake_case keys and arrays for repeated sibling elements. Output ONLY valid JSON.",
+  "rust_hook_template": "pub fn mutate_xml_response(body: &str) -> Result<serde_json::Value, morph_core::MorphError> {\n    morph_core::ollama::xml_to_json(body)\n}",
+  "sample_input": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<OrderResponse status=\"CONFIRMED\" region=\"us-east-1\">\n  <OrderId>ORD-90421</OrderId>\n  <TotalAmount>249.50</TotalAmount>\n  <Expedited>true</Expedited>\n  <Item sku=\"SKU-101\"><Qty>2</Qty><Price>99.75</Price></Item>\n  <Item sku=\"SKU-204\"><Qty>1</Qty><Price>50.00</Price></Item>\n</OrderResponse>"
+}

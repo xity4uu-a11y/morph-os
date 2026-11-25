@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Minimal least-privilege capability for morph-os desktop Control Panel",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}

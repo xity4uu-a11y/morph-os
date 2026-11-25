@@ -1,0 +1,24 @@
+{
+  "name": "create-morph-os",
+  "version": "1.0.0",
+  "description": "1-click launcher and project initializer for morph-os — local runtime stream, API, and DOM mutator",
+  "type": "module",
+  "license": "MIT",
+  "author": "xity4uu-a11y",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xity4uu-a11y/morph-os.git"
+  },
+  "bin": {
+    "create-morph-os": "bin/create-morph-os.mjs"
+  },
+  "scripts": {
+    "compile-wasm": "node scripts/compile-wasm.mjs",
+    "validate-plugins": "node scripts/validate-plugins.mjs",
+    "ui:test": "npm --prefix ui test",
+    "ui:build": "npm --prefix ui run build"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

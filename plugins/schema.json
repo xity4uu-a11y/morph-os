@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/xity4uu-a11y/morph-os/plugins/schema.json",
+  "title": "morph-os Mutation Plugin Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "version",
+    "target_kind",
+    "description",
+    "author",
+    "rules",
+    "llm_prompt",
+    "rust_hook_template"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "Unique kebab-case plugin identifier"
+    },
+    "aliases": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+      }
+    },
+    "name": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 120
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[a-zA-Z0-9.]+)?$"
+    },
+    "target_kind": {
+      "type": "string",
+      "enum": ["cli-stdio", "http-proxy", "dom-wasm", "stream-generic"]
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 400
+    },
+    "author": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 80
+    },
+    "fail_policy": {
+      "type": "string",
+      "enum": ["fail-open", "fail-closed"]
+    },
+    "output_format": {
+      "type": "string",
+      "enum": ["json", "ndjson", "csv", "text"]
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["op"],
+        "properties": {
+          "op": {
+            "type": "string",
+            "enum": [
+              "ascii_table_to_json",
+              "kv_to_json",
+              "xml_to_json",
+              "html_table_to_json",
+              "parse_json",
+              "rename_fields",
+              "redact_pii",
+              "wrap_envelope"
+            ]
+          }
+        }
+      }
+    },
+    "llm_prompt": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 8192
+    },
+    "rust_hook_template": {
+      "type": "string",
+      "minLength": 10
+    },
+    "sample_input": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "cli-table-to-json",
+  "aliases": ["cli-to-json", "ascii-table"],
+  "name": "Legacy CLI ASCII Table to JSON",
+  "version": "1.0.0",
+  "target_kind": "cli-stdio",
+  "description": "Parses legacy fixed-width, bordered, or pipe-delimited CLI stdout tables into strict typed JSON records.",
+  "author": "morph-os-core",
+  "fail_policy": "fail-open",
+  "output_format": "json",
+  "rules": [
+    {
+      "op": "ascii_table_to_json"
+    }
+  ],
+  "llm_prompt": "Convert the legacy CLI stdout table into a strict JSON array of objects using snake_case keys and inferred numeric/boolean types. Output ONLY valid JSON.",
+  "rust_hook_template": "pub fn mutate_cli_stream(raw: &str) -> Result<serde_json::Value, morph_core::MorphError> {\n    morph_core::ollama::ascii_table_to_json(raw)\n}",
+  "sample_input": "PID     SERVICE            STATE     MEM_MB   UPTIME_S   RESTARTS\n------------------------------------------------------------------\n1042    auth-gateway       RUNNING   128.4    86420      0\n1188    ledger-worker      DEGRADED  512.0    14210      3\n1204    legacy-cron        RUNNING   44.2     604800     0\n1319    report-exporter    STOPPED   0.0      0          1"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "pii-stream-scrubber",
+  "aliases": ["pii-scrub", "redact-pii"],
+  "name": "Zero-Cloud PII & Secret Stream Scrubber",
+  "version": "1.0.0",
+  "target_kind": "stream-generic",
+  "description": "Deterministically redacts emails, IPv4 addresses, SSNs, Luhn-valid card numbers, API keys, and phone numbers in real-time streams.",
+  "author": "morph-os-core",
+  "fail_policy": "fail-closed",
+  "output_format": "json",
+  "rules": [
+    {
+      "op": "redact_pii",
+      "include_report_envelope": true
+    }
+  ],
+  "llm_prompt": "Scrub all personally identifiable information (emails, SSNs, IPv4s, cards, bearer tokens) replacing them with [REDACTED:<TYPE>] placeholders. Output ONLY JSON with keys 'scrubbed' and 'redacted_total'.",
+  "rust_hook_template": "pub fn scrub_stream_chunk(raw: &str) -> (String, morph_core::ollama::RedactionReport) {\n    morph_core::ollama::redact_pii(raw)\n}",
+  "sample_input": "2026-11-25T14:02:11Z INFO auth_worker user=ops.admin@example.org ip=10.42.8.19 ssn=123-45-6789 phone=415-555-0199 auth=\"Bearer morph_demo_token_998877665544\""
+}

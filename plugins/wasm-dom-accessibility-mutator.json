@@ -1,0 +1,19 @@
+{
+  "id": "wasm-dom-accessibility-mutator",
+  "aliases": ["dom-table-to-json", "dom-mutator"],
+  "name": "WASM Browser DOM & HTML Table Mutator",
+  "version": "1.0.0",
+  "target_kind": "dom-wasm",
+  "description": "Extracts legacy HTML tables into structured JSON records and pairs with the compiled WebAssembly DOM kernel for local accessibility upgrades.",
+  "author": "morph-os-core",
+  "fail_policy": "fail-open",
+  "output_format": "json",
+  "rules": [
+    {
+      "op": "html_table_to_json"
+    }
+  ],
+  "llm_prompt": "Extract the HTML table into a clean JSON array with snake_case column headers and typed values. Output ONLY valid JSON.",
+  "rust_hook_template": "pub fn mutate_html_table(html: &str) -> Result<serde_json::Value, morph_core::MorphError> {\n    morph_core::ollama::html_table_to_json(html)\n}",
+  "sample_input": "<table id=\"legacy-grid\">\n  <tr><th>Host</th><th>Region</th><th>Latency Ms</th><th>Healthy</th></tr>\n  <tr><td>edge-01.internal</td><td>iad</td><td>12.4</td><td>true</td></tr>\n  <tr><td>edge-02.internal</td><td>fra</td><td>28.9</td><td>true</td></tr>\n  <tr><td>edge-03.internal</td><td>nrt</td><td>61.2</td><td>false</td></tr>\n</table>"
+}
