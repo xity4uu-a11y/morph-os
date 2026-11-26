@@ -6,8 +6,9 @@ use crate::pipeline::{
 };
 use crate::plugins::OutputFormat;
 use axum::body::{to_bytes, Body};
-use axum::extract::{Request, State};
-use axum::http::{HeaderMap, HeaderName, HeaderValue, StatusCode};
+use axum::extract::{DefaultBodyLimit, Request, State};
+use axum::http::{header, HeaderMap, HeaderName, HeaderValue, Method, StatusCode};
+use axum::middleware::{self, Next};
 use axum::response::{IntoResponse, Response};
 use axum::routing::{get, post};
 use axum::{Json, Router};
@@ -16,7 +17,7 @@ use serde_json::json;
 use std::net::SocketAddr;
 use std::sync::Arc;
 use std::time::Instant;
-use tower_http::cors::{Any, CorsLayer};
+use tower_http::cors::{AllowOrigin, CorsLayer};
 
 const DEFAULT_MAX_PROXY_BODY_BYTES: usize = 8 * 1024 * 1024;
 
@@ -101,13 +102,71 @@ pub struct HealthResponse {
     pub circuit_state: String,
 }
 
+/// Strictly validates that a CORS `Origin` header belongs to a local loopback or Tauri desktop origin.
+pub fn is_allowed_local_origin(origin: &str) -> bool {
+    let Some((scheme, rest)) = origin.split_once("://") else {
+        return false;
+    };
+    if rest.is_empty() || rest.contains('/') || rest.contains('@') || rest.contains('?') {
+        return false;
+    }
+    match scheme {
+        "tauri" => rest == "localhost",
+        "http" | "https" => {
+            let (host, port_opt) = if let Some(after_bracket) = rest.strip_prefix('[') {
+                let Some((ipv6, tail)) = after_bracket.split_once(']') else {
+                    return false;
+                };
+                if tail.is_empty() {
+                    (ipv6, None)
+                } else if let Some(p) = tail.strip_prefix(':') {
+                    (ipv6, Some(p))
+                } else {
+                    return false;
+                }
+            } else if let Some((h, p)) = rest.split_once(':') {
+                (h, Some(p))
+            } else {
+                (rest, None)
+            };
+            if let Some(p) = port_opt {
+                if p.is_empty() || p.parse::<u16>().is_err() {
+                    return false;
+                }
+            }
+            matches!(host, "127.0.0.1" | "localhost" | "::1" | "tauri.localhost")
+        }
+        _ => false,
+    }
+}
+
+async fn security_headers_middleware(req: Request, next: Next) -> Response {
+    let mut res = next.run(req).await;
+    let headers = res.headers_mut();
+    headers.insert(
+        HeaderName::from_static("x-content-type-options"),
+        HeaderValue::from_static("nosniff"),
+    );
+    headers.insert(
+        HeaderName::from_static("x-frame-options"),
+        HeaderValue::from_static("DENY"),
+    );
+    headers.insert(
+        HeaderName::from_static("referrer-policy"),
+        HeaderValue::from_static("no-referrer"),
+    );
+    res
+}
+
 /// Builds the complete Axum 0.8 router containing Control Panel API endpoints under `/_morph/*`
 /// and the fallback transparent reverse-proxy mutator for all upstream routes.
 pub fn build_proxy_router(state: Arc<ProxyState>) -> Router {
     let cors = CorsLayer::new()
-        .allow_origin(Any)
-        .allow_methods(Any)
-        .allow_headers(Any);
+        .allow_origin(AllowOrigin::predicate(|origin: &HeaderValue, _| {
+            origin.to_str().is_ok_and(is_allowed_local_origin)
+        }))
+        .allow_methods([Method::GET, Method::POST, Method::PUT, Method::PATCH, Method::DELETE, Method::OPTIONS])
+        .allow_headers([header::CONTENT_TYPE, header::ACCEPT, header::AUTHORIZATION]);
 
     Router::new()
         .route("/_morph/health", get(handle_health))
@@ -118,6 +177,8 @@ pub fn build_proxy_router(state: Arc<ProxyState>) -> Router {
         .route("/_morph/circuit/reset", post(handle_circuit_reset))
         .route("/_morph/ebpf/spec", get(handle_ebpf_spec))
         .fallback(handle_proxy_forward)
+        .layer(DefaultBodyLimit::max(DEFAULT_MAX_PROXY_BODY_BYTES))
+        .layer(middleware::from_fn(security_headers_middleware))
         .layer(cors)
         .with_state(state)
 }
